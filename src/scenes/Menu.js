@@ -4,7 +4,7 @@ class Menu extends Phaser.Scene{
     }
 
     create() {
-        this.add.text(20,20,"Rocket Patrol Menu");
+        //this.add.text(20,20,"Rocket Patrol Menu");
 
         //change scenes
         this.scene.start("playScene");
