@@ -67,18 +67,56 @@ class Play extends Phaser.Scene{
             //framerate of the animation
             frameRate: 30
         });
+
+        //initialize score
+        this.p1Score = 0;
+        //display score
+        let scoreConfig = {
+            fontFamily: 'Courier',
+            fontSize: '28px',
+            backgroundColor: '#F3B141',
+            color: '#843605',
+            align: 'right',
+            padding:{
+                top: 5,
+                bottom: 5,
+            },
+            fixedWidth: 100
+        }
+        //binding a score left property to the scene
+        this.scoreLeft = this.add.text(borderUISize+borderPadding,borderUISize+borderPadding*2,
+            this.p1Score, scoreConfig);
+
+        //GAME OVER flag telling the game to stop moving
+        this.gameOver = false;
+
+        scoreConfig.fixedWidth = 0;
+        //time delayed call calls the function after the time is up
+        this.clock = this.time.delayedCall(game.settings.gameTimer, () =>{ //1000 = 1 second, timer depends on difficulty
+            this.add.text(game.config.width/2, game.config.height/2, 'GAME OVER', scoreConfig).setOrigin(0.5);
+            this.add.text(game.config.width/2, game.config.height/2 +64, 'Press (R) to Restart or <- for Menu',
+            scoreConfig).setOrigin(0.5);
+            this.gameOver = true; //the game no longer plays
+        }, null, this);
     }
 
     update(){
+        //check the key input for restart
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
+            this.scene.restart();
+        }
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT))
         //scroll the texture around the sprite every frame, giving the expression of scrolling
         this.starfield.tilePositionX -=starSpeed;
 
-        //update rocket position
-        this.p1Rocket.update();
-        //update spaceship x3
-        this.ship01.update();
-        this.ship02.update();
-        this.ship03.update();
+        if(!this.gameOver){// when the game over is triggered, the objects no longer can move
+            //update rocket position
+            this.p1Rocket.update();
+            //update spaceship x3
+            this.ship01.update();
+            this.ship02.update();
+            this.ship03.update();
+        }
 
         //check collisions
         if(this.checkCollision(this.p1Rocket, this.ship03)){
@@ -118,6 +156,10 @@ class Play extends Phaser.Scene{
             ship.reset();   //put the ship back into the loop
             ship.alpha = 1;
             boom.destroy(); //destroys the animation
-        })
+        });
+          // score add and repaint
+        this.p1Score += ship.points;
+        this.scoreLeft.text = this.p1Score;
+        this.sound.play('sfx_explosion'); //when the ship is hit play the explosion sfx      
     }
 }
