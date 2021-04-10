@@ -103,9 +103,11 @@ class Play extends Phaser.Scene{
     update(){
         //check the key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
-            this.scene.restart();
+            this.scene.restart(); //resets the scene
         }
-        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT))
+        if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyLEFT)){
+            this.scene.start("menuScene"); //Goes back to the menu scene
+        }
         //scroll the texture around the sprite every frame, giving the expression of scrolling
         this.starfield.tilePositionX -=starSpeed;
 
