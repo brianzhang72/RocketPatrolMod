@@ -7,7 +7,7 @@ class Rocket extends Phaser.GameObjects.Sprite{
         //referecing the object it is enclosed in, which is the rocket class
         scene.add.existing(this);
         this.isFiring = false;  //track rocket firing status, if true we cannot move
-        this.moveSpeed = 2;     //pixels per frame
+        this.moveSpeed = 10;     //pixels per frame
     }
 
     update(){
@@ -19,5 +19,24 @@ class Rocket extends Phaser.GameObjects.Sprite{
                 this.x += this.moveSpeed;
             }
         }
+        //fire button
+        //just down command only activates when it is pressed down once
+        if(Phaser.Input.Keyboard.JustDown(keyF)){
+            this.isFiring = true;
+        }
+        //if fired, moves the rocket up
+        if(this.isFiring && this.y >= borderUISize*3 +borderPadding){
+            this.y -= this.moveSpeed;
+        }
+        //reset on miss
+        if(this.y<= borderUISize*3 + borderPadding){
+            this.reset();
+        }
+    }
+
+    //reset rocket to ground, make this a function for redundant code
+    reset(){
+        this.isFiring = false;
+        this.y = game.config.height - borderUISize - borderPadding;
     }
 }
