@@ -7,7 +7,11 @@ class Play extends Phaser.Scene{
         //load images/tile sprites
         this.load.image('rocket', './assets/rocket.png');
         this.load.image('spaceship', './assets/spaceship.png');
-        this.load.image('starfield', './assets/starfield.png');
+        this.load.image('starbackground', './assets/starbackground.png');
+        this.load.image('meteor', './assets/meteorUI.png');
+        this.load.image('border', './assets/border.png');
+        this.load.image('stars', './assets/stars.png');
+        this.load.image('fast_spaceship', './assets/fast_spaceship.png');
         //load spritesheet
         this.load.spritesheet('explosion', './assets/explosion.png',{
             //sprite sheet is divided into width and height 
@@ -29,27 +33,27 @@ class Play extends Phaser.Scene{
         //whichever image is created first gets pushed to the back of the web browser
 
         //place starfield
-        this.starfield = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'starfield').setOrigin(0, 0);
-        
-        //green UI background rectangle
-        this.add.rectangle(0, borderUISize + borderPadding, game.config.width, 
-        borderUISize * 2, 0x00FF00).setOrigin(0, 0);
-        //white rectangle
-        //set origin puts the origin at whatver you waant, default to center
-        this.add.rectangle(0, 0,game.config.width, borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, game.config.height - borderUISize, game.config.width,
-        borderUISize, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(0, 0, borderUISize, game.config.height, 0xFFFFFF).setOrigin(0, 0);
-        this.add.rectangle(game.config.width - borderUISize, 0, borderUISize, game.config.height,
-        0xFFFFFF).setOrigin(0, 0);
+        this.starfield = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'starbackground').setOrigin(0, 0);
+        this.stars = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'stars').setOrigin(0, 0);
+        this.stars.alpha = 0.5;
+
+
+        //add spaceship(x3)
+        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 
+            'spaceships', 0, 30).setOrigin(0,0);
+        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5
+            +borderPadding*2, 'spaceships', 2, 20).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width, borderPadding*4 + borderUISize*6, 
+            'fast_spaceship', 0, 10).setOrigin(0,0);
 
         //add Rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize
-        - borderPadding, 'rocket').setOrigin(0.5,0);
-        this.p2Rocket = new Rocket(this, game.config.width/2-this.p1Rocket.width*1.5, game.config.height - borderUISize
-        - borderPadding, 'rocket').setOrigin(0.5,0);
-        this.p3Rocket = new Rocket(this, game.config.width/2+this.p1Rocket.width*1.5, game.config.height - borderUISize
-        - borderPadding, 'rocket').setOrigin(0.5,0);
+            - borderPadding + 25, 'rocket').setOrigin(0.5,1);
+
+        //add border UI
+        this.border = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'border').setOrigin(0, 0);
+       
+        this.meteor = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'meteor').setOrigin(0, 0);
         
         //spaceship animation
         this.anims.create({
@@ -65,13 +69,7 @@ class Play extends Phaser.Scene{
             frameRate: 10
         });
         
-        //add spaceship(x3)
-        this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 
-            'spaceships', 0, 30).setOrigin(0,0);
-        this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5
-            +borderPadding*2, 'spaceships', 2, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderPadding*4 + borderUISize*6, 
-            'spaceships', 0, 10).setOrigin(0,0);
+        
 
         this.shipAnime(this.ship03);
         //define keys
@@ -127,6 +125,7 @@ class Play extends Phaser.Scene{
     }
 
     update(){
+    
         //check the key input for restart
         if (this.gameOver && Phaser.Input.Keyboard.JustDown(keyR)){
             this.scene.restart(); //resets the scene
@@ -135,15 +134,17 @@ class Play extends Phaser.Scene{
             this.scene.start("menuScene"); //Goes back to the menu scene
         }
         //scroll the texture around the sprite every frame, giving the expression of scrolling
-        this.starfield.tilePositionX -=starSpeed;
+        this.starfield.tilePositionX -= starSpeed;
+        this.stars.tilePositionX -= starSpeed*2;
+        this.meteor.tilePositionX += starSpeed;
 
         if(!this.gameOver){// when the game over is triggered, the objects no longer can move
             //update rocket position
             this.p1Rocket.update();
             //update spaceship x3
-            this.ship01.update();
-            this.ship02.update();
-            this.ship03.update();
+            this.ship01.update(1);
+            this.ship02.update(1);
+            this.ship03.update(2);
         }
 
         //check collisions

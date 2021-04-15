@@ -5,9 +5,10 @@ class Spaceship extends Phaser.GameObjects.Sprite{
         this.points = pointValue;   //store pointValue
         this.moveSpeed = game.settings.spaceshipSpeed         //pixels per frame
     }
-    update(){
+    update(speedMultiplier){
         //move spaceship left
-        this.x -= this.moveSpeed;
+
+        this.x -= this.moveSpeed * speedMultiplier;
         // wrap around left to right edge
         if(this.x <= 0 - this.width){
             this.reset();
@@ -17,5 +18,6 @@ class Spaceship extends Phaser.GameObjects.Sprite{
     //position reset
     reset(){
         this.x = game.config.width;
+        this.y = 150+Math.random()*250; //randomizes the location of the spawn
     }
 }
