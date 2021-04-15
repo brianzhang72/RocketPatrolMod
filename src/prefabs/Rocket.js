@@ -15,15 +15,14 @@ class Rocket extends Phaser.GameObjects.Sprite{
     update(){
         //left and right movement
         if(!this.isFiring){
-            if(keyLEFT.isDown && this.x >= borderUISize + this.width && this.rotation>-.75){
+            if(keyLEFT.isDown && this.x >= borderUISize + this.width && this.rotation>-1){
                 //this.x -= this.moveSpeed;
                 this.rotation -=0.1;
-            } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width && this.rotation<.75){
+            } else if (keyRIGHT.isDown && this.x <= game.config.width - borderUISize - this.width && this.rotation<1){
                 //this.x += this.moveSpeed;
                 this.rotation +=0.1;
             }
         }
-        console.log(this.rotation);
         //fire button
         //just down command only activates when it is pressed down once
         if(Phaser.Input.Keyboard.JustDown(keyF) && !this.isFiring){
@@ -47,7 +46,7 @@ class Rocket extends Phaser.GameObjects.Sprite{
     //reset rocket to ground, make this a function for redundant code
     reset(){
         this.isFiring = false;
-        this.y = game.config.height - borderUISize - borderPadding + 25;
+        this.y = game.config.height - borderUISize - borderPadding + 5;
         this.x = this.tempX;
     }
 }

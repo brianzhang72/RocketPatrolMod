@@ -17,7 +17,7 @@ class Spaceship extends Phaser.GameObjects.Sprite{
 
     //position reset
     reset(){
-        this.x = game.config.width;
+        this.x = game.config.width + Math.random()*800;
         this.y = 150+Math.random()*250; //randomizes the location of the spawn
     }
 }

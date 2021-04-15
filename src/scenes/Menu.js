@@ -6,55 +6,38 @@ class Menu extends Phaser.Scene{
         this.load.audio('sfx_select', './assets/blip_select12.wav');
         this.load.audio('sfx_explosion', './assets/explosion38.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
+        this.load.image('rulesUI', './assets/rulesUI.png');
+        this.load.image('spacebar', './assets/spacebar.png');
+        this.load.image('title', './assets/title.png');
     }
     create() {
-        //menu text configuration
-        let menuConfig = {
-            fontFamily: 'Courier',
-            fontSize: '28px',
-            backgroundColor: '#F3B141',
-            color: '#843605',
-            align: 'right',
-            padding: {
-                top: 5,
-                bottom: 5
-            },
-            fixedWidth: 0
-        }
-        this.add.text(game.config.width/2, game.config.height/2 -borderUISize - borderPadding,
-            'ROCKET PATROL', menuConfig).setOrigin(0.5);
-        this.add.text(game.config.width/2, game.config.height/2, 'Use <--> arrows to move & (F) to fire',
-            menuConfig).setOrigin(0.5);
-        menuConfig.backgroundColor = '#00FF00' //changes the background color of the next text from orange to green
-        menuConfig.color = '#000' //changes the next text color
-        this.add.text(game.config.width/2, game.config.height/2 + borderUISize +borderPadding,
-            'Press <- for Novice or -> for Expert', menuConfig).setOrigin(0.5); // changes the difficulty
-        
+        this.rules = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'rulesUI').setOrigin(0, 0);
+        this.title = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'title').setOrigin(0, 0);
+        this.space = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'spacebar').setOrigin(0, 0);
         // define keys for choosing the difficulty the game would be set at
         keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
         keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.temp = 0;
         //change scenes
         //this.scene.start("playScene");
     }
     update(){
         //if (Phaser.Input.Keyboard.JustDown)
-        if (Phaser.Input.Keyboard.JustDown(keyLEFT)){
-            //easy mode <-
-            game.settings = {
-                spaceshipSpeed: 3,
-                gameTimer: 60000
-            }
+        if (Phaser.Input.Keyboard.JustDown(keySPACE)){
+            if(this.temp == 0){
             this.sound.play('sfx_select');
-            this.scene.start('playScene');
-        }
-        if (Phaser.Input.Keyboard.JustDown(keyRIGHT)){
-            // hard mode ->
-            game.settings = {
-                spaceshipSpeed: 4,
-                gameTimer: 45000
+            this.title.alpha = 0;
+            this.temp +=1;
+            } else {
+                game.settings = {
+                    spaceshipSpeed: 4,
+                    gameTimer: 45000
+                }
+                this.sound.play('sfx_select');
+                this.scene.start("playScene");
             }
-            this.sound.play('sfx_select');
-            this.scene.start('playScene');
         }
+
     }
 }

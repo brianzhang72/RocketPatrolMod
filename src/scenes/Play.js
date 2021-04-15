@@ -40,15 +40,17 @@ class Play extends Phaser.Scene{
 
         //add spaceship(x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 
-            'spaceships', 0, 30).setOrigin(0,0);
+            'spaceships', 0, 10).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5
-            +borderPadding*2, 'spaceships', 2, 20).setOrigin(0,0);
-        this.ship03 = new Spaceship(this, game.config.width, borderPadding*4 + borderUISize*6, 
-            'fast_spaceship', 0, 10).setOrigin(0,0);
+            +borderPadding*2, 'spaceships', 2, 10).setOrigin(0,0);
+        this.ship03 = new Spaceship(this, game.config.width + borderUISize*4, borderUISize*8
+            +borderPadding*2, 'spaceships', 1, 10).setOrigin(0,0);
+        this.ship04 = new Spaceship(this, game.config.width, borderPadding*4 + borderUISize*6, 
+            'fast_spaceship', 0, 30).setOrigin(0,0);
 
         //add Rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize
-            - borderPadding + 25, 'rocket').setOrigin(0.5,1);
+            - borderPadding + 5, 'rocket').setOrigin(0.5,0.5);
 
         //add border UI
         this.border = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'border').setOrigin(0, 0);
@@ -144,10 +146,15 @@ class Play extends Phaser.Scene{
             //update spaceship x3
             this.ship01.update(1);
             this.ship02.update(1);
-            this.ship03.update(2);
+            this.ship03.update(1);
+            this.ship04.update(2);
         }
 
         //check collisions
+        if(this.checkCollision(this.p1Rocket, this.ship04)){
+            this.p1Rocket.reset();
+            this.shipExplode(this.ship04);
+        }
         if(this.checkCollision(this.p1Rocket, this.ship03)){
             this.p1Rocket.reset();
             this.shipExplode(this.ship03);
@@ -165,7 +172,7 @@ class Play extends Phaser.Scene{
 
     checkCollision(rocket, ship){
         //simple AABB checking
-        if( rocket.x<ship.x + ship.width &&
+        if( rocket.x < ship.x + ship.width &&
             rocket.x + rocket.width > ship.x &&
             rocket.y < ship.y + ship.height &&
             rocket.height + rocket.y >ship.y){
