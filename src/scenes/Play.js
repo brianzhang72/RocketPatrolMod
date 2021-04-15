@@ -16,6 +16,13 @@ class Play extends Phaser.Scene{
             startFrame: 0,
             endFrame: 9
         });
+        this.load.spritesheet('spaceships', './assets/spaceships.png',{
+            frameWidth: 80,
+            frameHeight: 40,
+            startFrame: 0,
+            endFrame: 4
+        });
+        
     }
 
     create() {
@@ -39,15 +46,34 @@ class Play extends Phaser.Scene{
         //add Rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize
         - borderPadding, 'rocket').setOrigin(0.5,0);
+        this.p2Rocket = new Rocket(this, game.config.width/2-this.p1Rocket.width*1.5, game.config.height - borderUISize
+        - borderPadding, 'rocket').setOrigin(0.5,0);
+        this.p3Rocket = new Rocket(this, game.config.width/2+this.p1Rocket.width*1.5, game.config.height - borderUISize
+        - borderPadding, 'rocket').setOrigin(0.5,0);
+        
+        //spaceship animation
+        this.anims.create({
+            //key is the name, frames it what sprite we want to access
+            key: 'shipfire', 
+            frames: this.anims.generateFrameNumbers('spaceships', {
+                //frames in order
+                start: 0,
+                end: 3,
+                first:0
+            }),
+            //framerate of the animation
+            frameRate: 10
+        });
         
         //add spaceship(x3)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 
-            'spaceship', 0, 30).setOrigin(0,0);
+            'spaceships', 0, 30).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5
-            +borderPadding*2, 'spaceship', 0, 20).setOrigin(0,0);
+            +borderPadding*2, 'spaceships', 2, 20).setOrigin(0,0);
         this.ship03 = new Spaceship(this, game.config.width, borderPadding*4 + borderUISize*6, 
-            'spaceship', 0, 10).setOrigin(0,0);
+            'spaceships', 0, 10).setOrigin(0,0);
 
+        this.shipAnime(this.ship03);
         //define keys
         keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
         keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
@@ -148,6 +174,13 @@ class Play extends Phaser.Scene{
         }
     }
 
+    shipAnime(ship){
+        let shipAnimate = this.add.sprite(ship.x, ship.y, 'spaceships').setOrigin(0,0);
+        shipAnimate.anims.play('shipfire');
+        shipAnimate.on('animationcomplete',()=>{
+            shipAnimate.anims.play('shipfire');
+        })
+    }
     shipExplode(ship){
         //temporarily hide the ship before resetting the poistion
         ship.alpha = 0; //transparent
