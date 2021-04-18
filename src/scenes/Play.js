@@ -32,12 +32,12 @@ class Play extends Phaser.Scene{
     create() {
         //whichever image is created first gets pushed to the back of the web browser
         this.game.x +=100;
-        //place starfield
+        //place starfield, a new starfield drawn by me
         this.starfield = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'starbackground').setOrigin(0, 0);
         this.stars = this.add.tileSprite(0, 0, game.config.width, game.config.height, 'stars').setOrigin(0, 0);
         this.stars.alpha = 0.5;
 
-        //add spaceship(x3)
+        //add spaceship(x4)
         this.ship01 = new Spaceship(this, game.config.width + borderUISize*6, borderUISize*4, 
             'spaceships', 0, 10, 1).setOrigin(0,0);
         this.ship02 = new Spaceship(this, game.config.width + borderUISize*3, borderUISize*5
@@ -46,6 +46,7 @@ class Play extends Phaser.Scene{
             +borderPadding*2, 'spaceships', 1, 10, 1).setOrigin(0,0);
         this.ship04 = new Spaceship(this, game.config.width, borderPadding*4 + borderUISize*6, 
             'fast_spaceship', 0, 30, 1).setOrigin(0,0);
+        //the spaceships will all spawn at various set points, but will respawn in random points
 
         //add Rocket (p1)
         this.p1Rocket = new Rocket(this, game.config.width/2, game.config.height - borderUISize
