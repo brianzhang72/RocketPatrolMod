@@ -3,8 +3,12 @@ class Menu extends Phaser.Scene{
         super("menuScene");
     }
     preload(){
+        this.load.audio('bgMusic', './assets/CreoNautilus.wav');
         this.load.audio('sfx_select', './assets/blip_select12.wav');
-        this.load.audio('sfx_explosion', './assets/explosion38.wav');
+        this.load.audio('sfx_explosion1', './assets/explosion1.wav');
+        this.load.audio('sfx_explosion2', './assets/explosion2.wav');
+        this.load.audio('sfx_explosion3', './assets/explosion3.wav');
+        this.load.audio('sfx_explosion4', './assets/explosion4.wav');
         this.load.audio('sfx_rocket', './assets/rocket_shot.wav');
         this.load.image('rulesUI', './assets/rulesUI.png');
         this.load.image('spacebar', './assets/spacebar.png');
@@ -21,6 +25,7 @@ class Menu extends Phaser.Scene{
         this.temp = 0;
         //change scenes
         //this.scene.start("playScene");
+        this.sound.play('bgMusic');
     }
     update(){
         //if (Phaser.Input.Keyboard.JustDown)
